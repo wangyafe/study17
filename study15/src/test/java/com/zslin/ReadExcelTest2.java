@@ -5,6 +5,9 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,26 +47,26 @@ public class ReadExcelTest2 {
     //读取到列表
     @Test
     public void testReadList() throws Exception {
-        List<WebDto> list = new ArrayList<WebDto>();
+        List<String> list = new ArrayList<String>();
 
-        HSSFWorkbook book = new HSSFWorkbook(new FileInputStream(ResourceUtils.getFile("classpath:eb-info.xls")));
-
-        HSSFSheet sheet = book.getSheetAt(0);
+//        HSSFWorkbook book = new HSSFWorkbook(new FileInputStream(ResourceUtils.getFile("classpath:账号加密-全量.xlsx")));
+        XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(ResourceUtils.getFile("classpath:账号加密-全量.xlsx")));
+        XSSFSheet sheet = book.getSheetAt(0);
 
         for(int i=2; i<sheet.getLastRowNum()+1; i++) {
-            HSSFRow row = sheet.getRow(i);
-            String name = row.getCell(0).getStringCellValue(); //名称
-            String url = row.getCell(1).getStringCellValue(); //url
-            String username = row.getCell(2).getStringCellValue();
-            String password = row.getCell(3).getStringCellValue();
-            Integer readCount = (int) row.getCell(4).getNumericCellValue();
+            XSSFRow row = sheet.getRow(i);
+            String name = row.getCell(6).getStringCellValue(); //名称
+            Integer readCount = (int) row.getCell(9).getNumericCellValue();
+            if(readCount==0){
+                list.add("\"" +name +"\"");
+            }
 
-            list.add(new WebDto(name, url, username, password, readCount));
+
         }
 
         System.out.println("共有 " + list.size() + " 条数据：");
-        for(WebDto wd : list) {
-            System.out.println(wd);
-        }
+
+            System.out.println(list);
+
     }
 }
